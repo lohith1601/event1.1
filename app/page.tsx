@@ -14,6 +14,7 @@ export default function Home() {
             <p className="p-regular-20 md:p-regular-24">
               Book and learn helpful tips from 3,168+ mentors in world-class companies with our global community.
             </p>
+            <p>"Join our global community to book and learn helpful tips from over 3,168 mentors working in world-class companies. Enhance your skills and network with industry experts for your professional growth</p>
             <Button size="sm" asChild className="button rounded-full w-full sm:w-fit">
               <Link href="#events">
                 Explore Now
@@ -40,6 +41,7 @@ export default function Home() {
           Search 
           CategoryFilter 
         </div>
+        
 
         {/* <Collection 
           data={events?.data}

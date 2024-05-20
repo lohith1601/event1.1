@@ -1,9 +1,7 @@
-import type { Metadata } from "next";
+import './globals.css'
 import { Inter } from "next/font/google";
 
-import Header from "@/components/shared/Header";
-import Footer from "@/components/shared/Footer";
-import { ClerkProvider } from '@clerk/nextjs'; // Ensure this is correctly imported , SignInButton, SignedIn, SignedOut, UserButton
+
 
 const inter = Inter({ subsets: ["latin"] });
 

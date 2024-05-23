@@ -27,18 +27,27 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Checkbox } from "@/components/ui/checkbox"
 import { useUploadThing } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
-import { createEvent } from "@/lib/mongodb/actions/event.actions";
+import { createEvent, updateEvent } from "@/lib/mongodb/actions/event.actions";
+import { IEvent } from "@/lib/mongodb/database/models/event.model";
 
 
 type EventFormProps = {
   userId: string;
   type: "Create" | "Update";
+  event?: IEvent,
+  eventId?: string
 };
 
-const EventForm: React.FC<EventFormProps> = ({ userId, type }) => {
+const EventForm: React.FC<EventFormProps> = ({ userId, type,event, eventId }) => {
   const [files, setFiles] = useState<File[]>([]);
 
-  const initialValues = eventDefaultValues;
+  const initialValues = event && type === 'Update' 
+  ? { 
+    ...event, 
+    startDateTime: new Date(event.startDateTime), 
+    endDateTime: new Date(event.endDateTime) 
+  }
+  : eventDefaultValues;
   const {startUpload} = useUploadThing('imageUploader')
   const router  = useRouter()
   const form = useForm<z.infer<typeof eventformSchema>>({
@@ -77,27 +86,27 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type }) => {
       }
     }
 
-    // if(type === 'Update') {
-    //   if(!eventId) {
-    //     router.back()
-    //     return;
-    //   }
+    if(type === 'Update') {
+      if(!eventId) {
+        router.back()
+        return;
+      }
 
-    //   try {
-    //     const updatedEvent = await updateEvent({
-    //       userId,
-    //       event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
-    //       path: `/events/${eventId}`
-    //     })
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          path: `/events/${eventId}`
+        })
 
-    //     if(updatedEvent) {
-    //       form.reset();
-    //       router.push(`/events/${updatedEvent._id}`)
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
+        if(updatedEvent) {
+          form.reset();
+          router.push(`/events/${updatedEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
   return (
     <Form {...form}>

@@ -48,7 +48,7 @@ export async function createEvent({ userId, event, path }: CreateEventParams) {
 // GET ONE EVENT BY ID
 export const  getEventById = async (eventId: string)=> {
   try {
-    await connectToDatabase()
+    await connectToDatabase();
 
     const event = await populateEvent(Event.findById(eventId))
 
@@ -103,13 +103,13 @@ export const  getAllEvents = async ({ query, limit = 6, page, category }: GetAll
   try {
     await connectToDatabase();
 
-    // const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {}
-    // const categoryCondition = category ? await getCategoryByName(category) : null
+    const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {}
+    const categoryCondition = category ? await getCategoryByName(category) : null
     const conditions = {
-      // $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
+      $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
     }
 
-    // const skipAmount = (Number(page) - 1) * limit
+    const skipAmount = (Number(page) - 1) * limit
     const eventsQuery = Event.find(conditions)
       .sort({ createdAt: 'desc' })
       .skip(0)
